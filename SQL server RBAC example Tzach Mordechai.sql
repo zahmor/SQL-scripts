@@ -1,7 +1,8 @@
 ﻿
 -- Tzach Mordechai 
 -- Zah.mor@gmail.com
--- V1.0, 29/10/2023
+-- V1.1, 30/10/2023
+-- Added example to create sql user using existing Azure active directory user
 
 
 --Do you still create and give permissions to your database by user? If yes, then you might be missing out on a powerful and simple solution that can transform your data security and access management: RBAC. In this post, I will explain what RBAC is, why it is better than granting permissions individually, and how to implement it in SQL Server.
@@ -54,8 +55,27 @@ WHERE r.name = 'Developers';
 
 -- Using active directory users on the cloud is another option that can offer more benefits than using SQL Server users. Active directory users on the cloud use Azure Active Directory (AAD), which is a cloud-based identity and access management service that integrates with SQL Server. AAD users are safer because they use multi-factor authentication instead of passwords. They also simplify user management because you can use existing AAD groups as roles in SQL Server. In addition, AAD users enable you to access SQL Server from any device and location without VPN. In the next post, I will show you how to use AAD users and groups for RBAC in SQL Server. Stay tuned! 😊
 
+-- A short example to add user that exist on Azure cloud Active directory
+
+USE master: 
 
  
+CREATE LOGIN  [David.BenYishai@tzach.com]  FROM EXTERNAL PROVIDER
+
+CREATE USER [David.BenYishai@tzach.com] FOR LOGIN [yaron.brand@atriis.com]
+
+
+-- Grant read and write access to a user in SQL Server
+USE [dev]
+GO
+
+CREATE USER [David.BenYishai@tzach.com] FOR LOGIN [David.BenYishai@tzach.com]
+GO
+
+ALTER ROLE [db_datareader] ADD MEMBER [David.BenYishai@tzach.com]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [David.BenYishai@tzach.com]
+GO
  
  
  
